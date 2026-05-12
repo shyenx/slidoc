@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env bash
 # Transcribe a single video to SRT with built-in quality gate.
 # Usage:
 #   transcribe.sh <video.mp4> <out_dir> <basename> [lang] [model]

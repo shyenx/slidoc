@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env bash
 # Extract keyframes from a single video.
 # Usage:
 #   extract_keyframes.sh <video.mp4> <out_dir> [scene|fps] [threshold|interval_sec]
