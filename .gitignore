@@ -39,11 +39,11 @@ Thumbs.db
 
 # slidoc working dirs (large binary outputs)
 **/frames/
-**/字幕/*.srt
-**/字幕/*.srt.bad
-**/视频整理/**/raw_segments.json
-**/视频整理/**/整理.md
-**/_整理/
+**/subtitles/*.srt
+**/subtitles/*.srt.bad
+**/videos/**/raw_segments.json
+**/videos/**/video-doc.md
+**/video-doc/
 
 # Test artifacts
 .pytest_cache/

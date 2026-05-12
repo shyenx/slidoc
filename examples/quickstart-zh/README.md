@@ -8,14 +8,14 @@ slidoc inspect .
 #   PPT screencast  → --mode scene
 #   Zoom-style UI   → --mode fps --interval 90
 
-mkdir -p 字幕 视频整理
-slidoc frames lecture.mp4 --out 视频整理/1-demo --mode scene
-slidoc transcribe lecture.mp4 --out 字幕 --basename 1-demo --model medium
-slidoc align .            # generates 视频整理/1-demo/raw_segments.json
+mkdir -p subtitles videos
+slidoc frames lecture.mp4 --out videos/1-demo --mode scene
+slidoc transcribe lecture.mp4 --out subtitles --basename 1-demo --model medium
+slidoc align .            # generates videos/1-demo/raw_segments.json
 slidoc check .
 slidoc prompt .           # prints LLM cleanup prompt
 ```
 
 Then dispatch the printed prompt to your LLM (Claude Code subagent recommended; see `docs/cleanup-with-claude.md`).
 
-Final output: `视频整理/1-demo/整理.md`.
+Final output: `videos/1-demo/video-doc.md`.

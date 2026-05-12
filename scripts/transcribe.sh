@@ -3,8 +3,8 @@
 # Usage:
 #   transcribe.sh <video.mp4> <out_dir> <basename> [lang] [model]
 # Examples:
-#   transcribe.sh lecture.mp4 ./字幕 1-陈天-入门 zh medium
-#   transcribe.sh lecture.mp4 ./字幕 1-陈天-入门 zh large-v3
+#   transcribe.sh lecture.mp4 ./subtitles 1-speaker-topic zh medium
+#   transcribe.sh lecture.mp4 ./subtitles 1-speaker-topic zh large-v3
 set -euo pipefail
 
 VIDEO="${1:?video path required}"

@@ -1,6 +1,6 @@
 ---
 name: lecture-video-to-doc
-description: Use when converting one or more lecture or training videos (Chinese or English speaker with slides on screen) into a structured Markdown document that pairs each slide with the cleaned narration for that slide. Triggers include "把视频整理成文档"、"视频带PPT配文字"、"讲座视频转图文笔记"、"lecture video to markdown"、"slides+narration doc". Skip when only raw transcription is needed (use video-transcribe) or only frames (use video-keyframe-extract).
+description: Use when converting one or more lecture or training videos (Chinese or English speaker with slides on screen) into a structured Markdown document that pairs each slide with the cleaned narration for that slide. Triggers include "把videos成文档"、"视频带PPT配文字"、"讲座视频转图文笔记"、"lecture video to markdown"、"slides+narration doc". Skip when only raw transcription is needed (use video-transcribe) or only frames (use video-keyframe-extract).
 ---
 
 # Lecture Video → Slides + Narration Markdown
@@ -13,9 +13,9 @@ The pipeline has four stages. Stages 1–3 are executed by the `slidoc` CLI; sta
 
 ```
 mp4 ─► ① slidoc frames     → frames/k_NNNN.jpg
-    ─► ② slidoc transcribe → 字幕/N-title.srt (+quality gate)
+    ─► ② slidoc transcribe → subtitles/N-title.srt (+quality gate)
     ─► ③ slidoc align      → raw_segments.json (idempotent)
-    ─► ④ LLM subagent      → 整理.md
+    ─► ④ LLM subagent      → video-doc.md
 ```
 
 ## When to use
@@ -44,11 +44,11 @@ mp4 ─► ① slidoc frames     → frames/k_NNNN.jpg
 
 ```bash
 slidoc inspect ~/my-batch                                    # decide mode per video
-slidoc frames ~/my-batch/1.mp4 --out _整理/视频整理/1-x --mode scene
-slidoc transcribe ~/my-batch/1.mp4 --out _整理/字幕 --basename 1-x --model medium
-slidoc align _整理
-slidoc check _整理                                            # status table
-slidoc prompt _整理                                           # prints LLM prompts
+slidoc frames ~/my-batch/1.mp4 --out video-doc/videos/1-x --mode scene
+slidoc transcribe ~/my-batch/1.mp4 --out video-doc/subtitles --basename 1-x --model medium
+slidoc align video-doc
+slidoc check video-doc                                            # status table
+slidoc prompt video-doc                                           # prints LLM prompts
 ```
 
 Or all-in-one:
@@ -67,7 +67,7 @@ For stage 4, dispatch the printed prompts as Claude Code subagents (`general-pur
 | Dispatch all cleanup agents in parallel | cap concurrency at 2 |
 | Let cleanup agents "read all images in parallel" | the prompt must say sequential |
 | Modify an old `raw_segments.json` by hand | regenerate via `slidoc align` instead |
-| Treat `整理.md` as authoritative without spot-check | always cross-check 2-3 segments against original SRT |
+| Treat `video-doc.md` as authoritative without spot-check | always cross-check 2-3 segments against original SRT |
 
 ## See also
 

@@ -10,14 +10,14 @@ from .utils import fail, ok, parse_index_prefix, warn
 
 def check_batch(
     root: Path,
-    srt_subdir: str = "字幕",
-    video_subdir: str = "视频整理",
+    srt_subdir: str = "subtitles",
+    video_subdir: str = "videos",
 ) -> dict:
     """Print per-video status. Returns summary counts."""
     srt_dir = root / srt_subdir
     vroot = root / video_subdir
 
-    counts = {"videos": 0, "srt": 0, "frames": 0, "aligned": 0, "整理": 0, "issues": 0}
+    counts = {"videos": 0, "srt": 0, "frames": 0, "aligned": 0, "doc": 0, "issues": 0}
 
     if not srt_dir.exists() or not vroot.exists():
         fail(f"Missing expected subdirs in {root}: {srt_subdir}/, {video_subdir}/")
@@ -65,12 +65,12 @@ def check_batch(
         else:
             issues.append("not aligned")
 
-        doc = vdir / "整理.md"
+        doc = vdir / "video-doc.md"
         if doc.exists():
-            counts["整理"] += 1
+            counts["doc"] += 1
             line += f"  doc={doc.stat().st_size // 1024}KB"
         else:
-            issues.append("no 整理.md")
+            issues.append("no video-doc.md")
 
         if issues:
             counts["issues"] += 1
@@ -82,7 +82,7 @@ def check_batch(
     n = counts["videos"]
     print(
         f"Summary: {counts['srt']}/{n} SRT, {counts['frames']}/{n} frames, "
-        f"{counts['aligned']}/{n} aligned, {counts['整理']}/{n} 整理.md "
+        f"{counts['aligned']}/{n} aligned, {counts['doc']}/{n} video-doc.md "
         f"({counts['issues']} issues)"
     )
     return counts

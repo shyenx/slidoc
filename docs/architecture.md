@@ -17,7 +17,7 @@
    ║  ffmpeg + select=scene     ║  whisper.cpp                    ║
    ║  OR fps=1/N                ║  + quality gate (≥80% unique)   ║
    ║                            ║  + large-v3 retry if needed     ║
-   ║  → frames/k_NNNN.jpg       ║  → 字幕/N-title.srt             ║
+   ║  → frames/k_NNNN.jpg       ║  → subtitles/N-title.srt             ║
    ║  → frame_log.txt           ║                                 ║
    ╚══════════════════════════════════════════════════════════════╝
               │                              │
@@ -46,7 +46,7 @@
    ║  Agent reads each frame sequentially, removes fillers /        ║
    ║  interaction / hallucinations, preserves substance, writes:    ║
    ║                                                                ║
-   ║  → 整理.md  (1 PPT thumbnail + 1-3 short paragraphs per seg)   ║
+   ║  → video-doc.md  (1 PPT thumbnail + 1-3 short paragraphs per seg)   ║
    ╚══════════════════════════════════════════════════════════════╝
 ```
 
@@ -57,9 +57,9 @@ Each stage produces a single, durable artifact on disk. Re-running a downstream 
 | Stage | Artifact | Re-run cost |
 |---|---|---|
 | 1 | `frames/`, `frame_log.txt` | ~1 minute per hour of video |
-| 2 | `字幕/N-title.srt` | ~1x realtime on Apple Silicon (medium); ~1.5x (large-v3) |
+| 2 | `subtitles/N-title.srt` | ~1x realtime on Apple Silicon (medium); ~1.5x (large-v3) |
 | 3 | `raw_segments.json` | seconds; idempotent |
-| 4 | `整理.md` | minutes per video (LLM-bound) |
+| 4 | `video-doc.md` | minutes per video (LLM-bound) |
 
 ## Why split into a Python package + shell scripts?
 
@@ -80,4 +80,4 @@ For scene-detect extractions, animation noise (cursor blinks, brief overlays) ca
 | `k_NNNN.jpg` | Kept after dedup, renumbered. Signals "already processed" to `align`. |
 | `*.srt.bad` | Backup of a low-quality SRT before retry with large-v3. Kept for debugging. |
 | `raw_segments.json` | Time-aligned frames+narration; the contract between stage 3 and stage 4. |
-| `整理.md` | Final stage 4 output. Chinese name preserved because that's how this pipeline came to be. |
+| `video-doc.md` | Final stage 4 output: one PPT thumbnail + cleaned narration per segment. |

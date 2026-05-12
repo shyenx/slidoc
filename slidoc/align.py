@@ -179,8 +179,8 @@ def process_video(
 
 def align_batch(
     root: Path,
-    srt_subdir: str = "字幕",
-    video_subdir: str = "视频整理",
+    srt_subdir: str = "subtitles",
+    video_subdir: str = "videos",
     force: bool = False,
 ) -> list[dict]:
     """Align every video subdirectory in `root/video_subdir`.

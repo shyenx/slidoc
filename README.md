@@ -13,7 +13,7 @@
  mp4 ─┬─► ① frames        (ffmpeg scene-detect or fixed-interval)
       ├─► ② srt           (whisper.cpp with quality gate)
       ├─► ③ raw_segments  (slidoc align: SRT × frames time-window join)
-      └─► ④ 整理.md       (LLM cleanup via subagent, slide + cleaned narration)
+      └─► ④ video-doc.md       (LLM cleanup via subagent, slide + cleaned narration)
 ```
 
 ## Why slidoc?
@@ -100,7 +100,7 @@ Then in any Claude Code session just say:
 >
 > （或中文：把 `/path/to/my-batch/` 里的视频整理成文档）
 
-Claude will invoke the `lecture-video-to-doc` skill and drive the entire pipeline — inspect → frames → transcribe → align → dispatch ≤2 cleanup sub-agents → produce one `整理.md` per video. You only confirm the extraction mode per video and wait for transcription.
+Claude will invoke the `lecture-video-to-doc` skill and drive the entire pipeline — inspect → frames → transcribe → align → dispatch ≤2 cleanup sub-agents → produce one `video-doc.md` per video. You only confirm the extraction mode per video and wait for transcription.
 
 #### Option B — One shell command (CLI orchestrator)
 
@@ -108,7 +108,7 @@ Claude will invoke the `lecture-video-to-doc` skill and drive the entire pipelin
 slidoc run my-batch/
 ```
 
-Runs stages 1–3 sequentially and prints the cleanup prompts for stage 4. Paste each printed prompt into your LLM of choice (Claude Code, OpenAI, Ollama, …) to produce the final `整理.md` files. Good for scripting, CI, or non-Claude LLMs.
+Runs stages 1–3 sequentially and prints the cleanup prompts for stage 4. Paste each printed prompt into your LLM of choice (Claude Code, OpenAI, Ollama, …) to produce the final `video-doc.md` files. Good for scripting, CI, or non-Claude LLMs.
 
 #### Option C — Stage-by-stage (full manual control)
 
@@ -117,21 +117,21 @@ Runs stages 1–3 sequentially and prints the cleanup prompts for stage 4. Paste
 slidoc inspect my-batch/
 
 # Stage 1 — keyframes
-slidoc frames my-batch/1-speaker-topic.mp4 --out _整理/视频整理/1-speaker --mode scene
-slidoc frames my-batch/3-zoom-recording.mp4 --out _整理/视频整理/3-zoom --mode fps --interval 90
+slidoc frames my-batch/1-speaker-topic.mp4 --out video-doc/videos/1-speaker --mode scene
+slidoc frames my-batch/3-zoom-recording.mp4 --out video-doc/videos/3-zoom --mode fps --interval 90
 
 # Stage 2 — transcribe with built-in quality gate
-slidoc transcribe my-batch/1-speaker-topic.mp4 --out _整理/字幕 --basename 1-speaker --model medium
+slidoc transcribe my-batch/1-speaker-topic.mp4 --out video-doc/subtitles --basename 1-speaker --model medium
 # If unique-line ratio < 80%, the tool exits with code 4 and prints the large-v3 retry command.
 
 # Stage 3 — align frames × SRT (idempotent — safe to re-run)
-slidoc align _整理/
+slidoc align video-doc/
 
 # Stage 4 — generate cleanup prompts; dispatch them yourself
-slidoc prompt _整理/
+slidoc prompt video-doc/
 
 # Final verification
-slidoc check _整理/
+slidoc check video-doc/
 ```
 
 Best when you're debugging, want to swap one stage's implementation, or only need part of the pipeline.
@@ -155,9 +155,9 @@ Best when you're debugging, want to swap one stage's implementation, or only nee
 | Stage | Tool | Output |
 |---|---|---|
 | ① Keyframes | `slidoc frames` (wraps `ffmpeg`) | `frames/k_NNNN.jpg` + `frame_log.txt` |
-| ② Subtitles | `slidoc transcribe` (wraps `whisper-cli`) | `字幕/N-title.srt` + quality gate verdict |
+| ② Subtitles | `slidoc transcribe` (wraps `whisper-cli`) | `subtitles/N-title.srt` + quality gate verdict |
 | ③ Alignment | `slidoc align` (Python) | `raw_segments.json` |
-| ④ Cleanup | LLM subagent + `templates/cleanup-prompt.md` | `整理.md` |
+| ④ Cleanup | LLM subagent + `templates/cleanup-prompt.md` | `video-doc.md` |
 
 The fourth stage is intentionally LLM-driven and not automated inside slidoc — different users have different LLM providers, model choices, and rate-limit budgets. The prompt template is fully specified, includes the validated cleaning rules, and is one copy-paste away.
 

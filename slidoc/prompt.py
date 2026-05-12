@@ -13,7 +13,7 @@ Inputs:
 - PPT frames: `{VDIR}/frames/k_NNNN.jpg` (or f_NNNN.jpg).
 
 Output (Write tool, single file, overwrite if exists):
-`{VDIR}/整理.md`
+`{VDIR}/video-doc.md`
 
 Cleaning rules for each segment's `raw`:
 1. Remove fillers: filler words like 嗯/啊/呃/那个/就是说/对吧 (English: um, uh, like).
@@ -73,7 +73,7 @@ def build_prompt(
     )
 
 
-def emit_prompts_for_batch(root: Path, video_subdir: str = "视频整理") -> None:
+def emit_prompts_for_batch(root: Path, video_subdir: str = "videos") -> None:
     """Print one cleanup prompt per video for the user to dispatch."""
     vroot = root / video_subdir
     for vdir in sorted(p for p in vroot.iterdir() if p.is_dir()):

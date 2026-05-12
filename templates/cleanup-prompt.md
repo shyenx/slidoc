@@ -13,7 +13,7 @@ Inputs:
 - PPT frames: `{VDIR}/frames/k_NNNN.jpg` (or f_NNNN.jpg)
 
 Output (Write tool, single file, overwrite if exists):
-`{VDIR}/整理.md`
+`{VDIR}/video-doc.md`
 
 Cleaning rules for each segment's `raw`:
 1. **Remove fillers**: 嗯、啊、呃、那个、就是说、我想说的是、对吧、是吧、哦、无意义的"然后".
@@ -73,7 +73,7 @@ Process segments sequentially. Reply only "DONE" when finished.
 | `{N}` | 1 |
 | `{TITLE}` | AI 企业培训入门 |
 | `{SPEAKER}` | 陈天 |
-| `{VDIR}` | `/path/to/_整理/视频整理/1-陈天-AI企业培训入门` |
+| `{VDIR}` | `/path/to/video-doc/videos/1-chentian-ai-training-intro` |
 | `{N_SEGMENTS}` | 28 |
 | `{DURATION}` | 1h33m |
 | `{RELATIVE_PATH_TO_MP4}` | `../../../1【教练分享】AI企业培训入门_陈天.mp4` |

@@ -85,9 +85,9 @@ def _add_transcribe(sub):
 
 def _add_align(sub):
     p = sub.add_parser("align", help="Align frames with SRT (idempotent)")
-    p.add_argument("root", type=Path, help="batch root containing 字幕/ and 视频整理/")
-    p.add_argument("--srt-dir", default="字幕")
-    p.add_argument("--video-dir", default="视频整理")
+    p.add_argument("root", type=Path, help="batch root containing subtitles/ and videos/")
+    p.add_argument("--srt-dir", default="subtitles")
+    p.add_argument("--video-dir", default="videos")
     p.add_argument("--force", action="store_true", help="rebuild even if cache fresh")
 
     def _run(a):
@@ -99,8 +99,8 @@ def _add_align(sub):
 def _add_check(sub):
     p = sub.add_parser("check", help="Verify all artifacts present in a batch")
     p.add_argument("root", type=Path)
-    p.add_argument("--srt-dir", default="字幕")
-    p.add_argument("--video-dir", default="视频整理")
+    p.add_argument("--srt-dir", default="subtitles")
+    p.add_argument("--video-dir", default="videos")
 
     def _run(a):
         c = check_batch(a.root, srt_subdir=a.srt_dir, video_subdir=a.video_dir)
@@ -116,7 +116,7 @@ def _add_prompt(sub):
         help="Print cleanup prompts for stage 4 (one per video with raw_segments.json)",
     )
     p.add_argument("root", type=Path)
-    p.add_argument("--video-dir", default="视频整理")
+    p.add_argument("--video-dir", default="videos")
 
     def _run(a):
         emit_prompts_for_batch(a.root, video_subdir=a.video_dir)
@@ -130,7 +130,7 @@ def _add_run(sub):
         help="Orchestrate inspect -> frames -> transcribe -> align for a whole batch",
     )
     p.add_argument("batch_dir", type=Path)
-    p.add_argument("--out", type=Path, help="output root (default: batch_dir/_整理)")
+    p.add_argument("--out", type=Path, help="output root (default: batch_dir/video-doc)")
     p.add_argument(
         "--frames-mode", choices=["scene", "fps"], default="scene",
         help="default extraction mode (per-video can be overridden by editing scripts)",
@@ -139,10 +139,10 @@ def _add_run(sub):
     p.add_argument("--language", default="zh")
 
     def _run(a):
-        out = a.out or (a.batch_dir / "_整理")
+        out = a.out or (a.batch_dir / "video-doc")
         out.mkdir(parents=True, exist_ok=True)
-        (out / "字幕").mkdir(exist_ok=True)
-        (out / "视频整理").mkdir(exist_ok=True)
+        (out / "subtitles").mkdir(exist_ok=True)
+        (out / "videos").mkdir(exist_ok=True)
 
         banner("Stage 0: inspect")
         inspect_batch(a.batch_dir)
@@ -154,7 +154,7 @@ def _add_run(sub):
 
         banner("Stage 1: keyframes")
         for v in videos:
-            vdir = out / "视频整理" / v.stem
+            vdir = out / "videos" / v.stem
             try:
                 extract_keyframes(v, vdir, mode=a.frames_mode)
             except Exception as e:
@@ -162,7 +162,7 @@ def _add_run(sub):
 
         banner("Stage 2: transcribe")
         for v in videos:
-            srt, qr = transcribe(v, out / "字幕", v.stem, model=a.model, language=a.language)
+            srt, qr = transcribe(v, out / "subtitles", v.stem, model=a.model, language=a.language)
             report_quality(qr, v.stem, a.model)
 
         banner("Stage 3: align")

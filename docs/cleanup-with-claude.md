@@ -19,12 +19,12 @@ The repository ships a Claude Code skill at `.claude/skills/lecture-video-to-doc
 
 ## Recommended workflow
 
-After stages 1–3 have produced `_整理/视频整理/<N-title>/raw_segments.json` for each video:
+After stages 1–3 have produced `video-doc/videos/<N-title>/raw_segments.json` for each video:
 
 1. **Inspect segment counts.**
 
    ```bash
-   slidoc check /path/to/_整理
+   slidoc check /path/to/video-doc
    ```
 
 2. **Decide concurrency.** Per [docs/lessons-learned.md](lessons-learned.md#3-naive-parallel-llm-cleanup-oom-kills-the-process):
@@ -35,20 +35,20 @@ After stages 1–3 have produced `_整理/视频整理/<N-title>/raw_segments.js
 3. **Generate prompts.**
 
    ```bash
-   slidoc prompt /path/to/_整理
+   slidoc prompt /path/to/video-doc
    ```
 
    This prints one fully-substituted cleanup prompt per video. Each prompt names the exact `raw_segments.json` path and the exact output file path.
 
-4. **Dispatch in Claude Code.** Within Claude Code, send each prompt to a `general-purpose` subagent (background:true). The agent reads the JSON, reads frames sequentially, and writes `整理.md`.
+4. **Dispatch in Claude Code.** Within Claude Code, send each prompt to a `general-purpose` subagent (background:true). The agent reads the JSON, reads frames sequentially, and writes `video-doc.md`.
 
 5. **Verify.**
 
    ```bash
-   slidoc check /path/to/_整理
+   slidoc check /path/to/video-doc
    ```
 
-   Every video should now show `doc=XXkB`. Open one or two `整理.md` files and spot-check against the original SRT.
+   Every video should now show `doc=XXkB`. Open one or two `video-doc.md` files and spot-check against the original SRT.
 
 ## Adapting to other LLMs
 

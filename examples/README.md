@@ -11,7 +11,7 @@ cd examples/quickstart-zh
 # Put a short Chinese lecture mp4 here, e.g. lecture.mp4
 slidoc inspect .
 slidoc frames lecture.mp4 --out work --mode scene
-slidoc transcribe lecture.mp4 --out 字幕 --basename 1-demo --model medium
+slidoc transcribe lecture.mp4 --out subtitles --basename 1-demo --model medium
 slidoc align .
 slidoc check .
 slidoc prompt .  # copy the printed prompt into Claude Code
