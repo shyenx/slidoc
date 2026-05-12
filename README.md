@@ -1,6 +1,8 @@
-# slidoc
+<div align="center">
 
-> Turn lecture & training videos into Markdown documents that **pair each slide with its cleaned narration**.
+# 🎬 slidoc
+
+### Turn lecture videos into Markdown that pairs every slide with its cleaned narration.
 
 [English](README.md) · [中文](README.zh-CN.md)
 
@@ -10,105 +12,128 @@
 [![ffmpeg](https://img.shields.io/badge/requires-ffmpeg-orange.svg)](https://ffmpeg.org/)
 [![whisper.cpp](https://img.shields.io/badge/requires-whisper.cpp-purple.svg)](https://github.com/ggerganov/whisper.cpp)
 
-## What this is
-
-`slidoc` is a **hybrid project**: a Python CLI package that ships with a bundled Claude Code skill.
-
-- **As a CLI tool** — install with `pip install -e .`, then run `slidoc inspect|frames|transcribe|align|check|prompt|run` from any shell. Useful in CI, scripts, or non-Claude workflows.
-- **As a Claude Code skill** — symlink `.claude/skills/lecture-video-to-doc/` into your `~/.claude/skills/` (`make install-skill`) and Claude drives the whole pipeline end-to-end when you mention lecture videos.
-
-Pick the surface that fits your workflow; both wrap the same four-stage pipeline.
+</div>
 
 ---
 
-## The problem this solves
+## 💡 The problem
 
-Video is the most natural medium for explanation, demos, and discussion — but it's **terrible to consume after the fact**.
+Video is the most natural medium for **explanation, demos, and discussion** — but it's terrible to consume after the fact.
 
-- **You can't skim.** A 2-hour lecture takes 2 hours to watch. There is no Ctrl-F for spoken content.
-- **You can't sample.** Scrubbing the timeline tells you nothing about which minute has the dense content.
-- **You can't reuse.** Want one quote, one slide, one number? Rewatch.
-- **You can't batch.** A 10-video training series buries the same key insights under 15+ hours of recording.
+| | What you can't do with a 2-hour mp4 |
+|---|---|
+| 🔍 | **Skim.** No Ctrl-F for spoken content. |
+| 🎚️ | **Sample.** Scrubbing tells you nothing about content density. |
+| 🧷 | **Quote.** Want one line, one slide, one number? Rewatch. |
+| 📚 | **Batch.** A 10-video series buries the same insights under 15+ hours. |
 
-Reading is 5–10× faster than watching. **A document of "slide thumbnail + cleaned narration" gives you something you can scan, search, quote, and reuse**, while every paragraph still ties back to a specific moment in the original video.
+> Reading is **5–10× faster** than watching.
 
-`slidoc` exists for three concrete use cases:
+A document of *slide thumbnail + cleaned narration* gives you something **scannable, searchable, quotable, reusable** — and every paragraph still ties back to a specific moment in the original video.
 
-1. **"One long video, 30 minutes of my time."** Read the doc instead of watching. Jump straight to the slide that matters.
-2. **"I attended it; I want my notes."** Get a per-slide transcript faster than you could type one yourself.
-3. **"I have a whole series."** Batch-process 5+ videos and produce a searchable archive instead of a folder of mp4s.
+### Built for three concrete situations
 
-In one sentence: **video is information-rich but opaque; slidoc makes it as scannable as a book.**
+> 🎯  **One long video, 30 minutes of your time.**
+> Read the doc, jump to the slide that matters.
+
+> 📝  **You attended live; you want notes.**
+> Get a per-slide transcript faster than you could type one yourself.
+
+> 🗂️  **You have a whole series.**
+> Batch 5+ videos into a searchable archive, not a folder of mp4s.
+
+**In one sentence:** *video is information-rich but opaque; slidoc makes it as scannable as a book.*
 
 ---
 
-## How it works
+## 📦 What this is
 
-`slidoc` is a four-stage local pipeline that converts one or many lecture videos (Chinese or English, speaker + slides) into a structured Markdown document where **each PPT slide thumbnail is paired with the cleaned narration the speaker delivered while that slide was on screen**. Filler words, audience interaction, technical chitchat, and Whisper hallucinations are stripped automatically; substantive content (concepts, frameworks, names, numbers, examples, Q&A) is preserved.
+`slidoc` is a **hybrid project** — a Python CLI package that ships with a bundled Claude Code skill. Pick whichever surface fits your workflow; both wrap the same pipeline.
+
+🐚 &nbsp;**As a CLI tool**
+&nbsp;&nbsp;&nbsp;&nbsp;`pip install -e .` then run `slidoc inspect | frames | transcribe | align | check | prompt | run`.
+&nbsp;&nbsp;&nbsp;&nbsp;Good for CI, scripts, non-Claude workflows.
+
+🤖 &nbsp;**As a Claude Code skill**
+&nbsp;&nbsp;&nbsp;&nbsp;`make install-skill`, then say *"convert these lecture videos to Markdown"* and Claude drives the whole pipeline end-to-end.
+
+---
+
+## ⚙️ How it works
+
+A four-stage local pipeline. Each stage produces a durable artifact, so a tweak downstream never costs you the long whisper run upstream.
 
 ```
- mp4 ─┬─► ① frames        (ffmpeg scene-detect or fixed-interval)
-      ├─► ② srt           (whisper.cpp with quality gate)
-      ├─► ③ raw_segments  (slidoc align: SRT × frames time-window join)
-      └─► ④ video-doc.md  (LLM cleanup via subagent, slide + cleaned narration)
+ mp4 ─┬─► ①  frames        ffmpeg  (scene-detect or fixed-interval)
+      │
+      ├─► ②  srt           whisper.cpp  + quality gate
+      │
+      ├─► ③  raw_segments  slidoc align  (SRT × frames time-window join)
+      │
+      └─► ④  video-doc.md  LLM subagent  (slide + cleaned narration)
 ```
 
-## Why a dedicated tool (vs. "just run Whisper")
+Every PPT slide thumbnail is paired with the cleaned narration the speaker delivered while that slide was on screen. Filler words, audience interaction, and Whisper hallucinations are stripped automatically; concepts, frameworks, names, numbers, and Q&A are preserved.
 
-If you've ever tried to "just transcribe" a 2-hour lecture, you know the pain:
+---
 
-- **Whisper hallucinates** on long audio — the same line repeated 500 times, silently destroying 25 min of content.
-- **Scene detection breaks** on Zoom recordings (chat sidebar keeps moving → 194 false-positive frames).
-- **Naive parallel transcript cleaning blows up memory** when each agent reads 20+ slide images at once.
-- **Output is a wall of text** with no visual anchor to what was on screen.
+## 🛡️ Why a dedicated tool (vs. "just run Whisper")
 
-slidoc was built and battle-tested while processing 7.5 hours of real-world training videos. Every rule in this pipeline corresponds to a bug we hit.
+If you've ever tried to *just transcribe* a 2-hour lecture, you know the pain:
 
-## What you get
+- 🌀 &nbsp;**Whisper hallucinates** on long audio — one line repeated 500 times, silently destroying 25 min of content.
+- 📡 &nbsp;**Scene detection breaks** on Zoom recordings — chat sidebar movement → 194 false-positive frames.
+- 💥 &nbsp;**Parallel cleanup blows up memory** — agents reading 20+ slide images each → OOM.
+- 📜 &nbsp;**Output becomes a wall of text** with no visual anchor.
 
-A single Markdown document like this per video:
+> *slidoc was built and battle-tested on **7.5 hours** of real-world training videos. Every rule in this pipeline corresponds to a bug we hit.*
+
+---
+
+## ✨ What you get
+
+One Markdown file per video:
 
 ```markdown
 # Effective Training Delivery — Core Skills & Growth Path
 
-> Speaker: B  |  Duration: 1h05m  |  Frames: 28  |  Source: [MP4](...)
+> Speaker: B  |  Duration: 1h05m  |  Frames: 28  |  Source: MP4
 
 ## Table of contents
-- [00:00 Section 1: opening sound check](#section-1)
-- [03:32 Section 6: opening of the practice journey](#section-6)
-- [04:53 Section 7: introduction and team](#section-7)
+- [00:00  §1 — opening sound check](#section-1)
+- [03:32  §6 — opening of the practice journey](#section-6)
+- [04:53  §7 — introduction and team](#section-7)
 ...
 
-## Section 7 · 00:04:53
+## §7 · 04:53
 ![slide](frames/k_0007.jpg)
 
-Brief self-introduction: longtime practitioner in the prompt-engineering space,
-graduate of an early cohort of a well-known training program...
-(filler words, interaction adjustments, and whisper hallucinations stripped;
-all substantive content preserved.)
+Brief self-introduction: longtime practitioner in the prompt-engineering
+space, graduate of an early cohort of a well-known training program…
+
+(Filler words, interaction adjustments, and whisper hallucinations
+stripped; all substantive content preserved.)
 ```
 
-## Quick Start
+---
+
+## 🚀 Quick start
 
 ### 1. Install
 
 ```bash
-# Clone
 git clone https://github.com/shyenx/slidoc.git
 cd slidoc
-
-# Install Python package (requires Python 3.9+)
-pip install -e .
-
-# Verify external deps
-which ffmpeg whisper-cli   # both must exist
-ls ~/.cache/whisper/ggml-medium.bin ~/.cache/whisper/ggml-large-v3.bin  # need at least one
+pip install -e .                                # Python package
+which ffmpeg whisper-cli                        # system deps
+ls ~/.cache/whisper/ggml-medium.bin             # at least one model
 ```
 
 System dependencies:
+
 - **ffmpeg** — `brew install ffmpeg` (macOS) or `apt install ffmpeg` (Linux)
-- **whisper.cpp** with the `whisper-cli` binary on `$PATH` — see [whisper.cpp installation](https://github.com/ggerganov/whisper.cpp)
-- **whisper models** — download `ggml-medium.bin` and (recommended) `ggml-large-v3.bin` to `~/.cache/whisper/`
+- **whisper.cpp** — install [whisper-cli](https://github.com/ggerganov/whisper.cpp) and put it on `$PATH`
+- **whisper models** — download `ggml-medium.bin` (and ideally `ggml-large-v3.bin`) to `~/.cache/whisper/`
 
 ### 2. Lay out your batch
 
@@ -119,51 +144,54 @@ my-batch/
 └── ...
 ```
 
-The leading `N-` index in each filename determines pairing across stages (SRT ↔ frames ↔ output dir).
+The leading `N-` index pairs files across stages (SRT ↔ frames ↔ output dir).
 
-### 3. Run the pipeline — three options
+### 3. Run — pick your level of automation
 
-Pick the level of automation you want.
-
-#### Option A — One sentence in Claude Code (fully automated)
-
-If you use [Claude Code](https://claude.ai/code), install the bundled skill once:
+<details open>
+<summary><b>🅐 &nbsp;One sentence in Claude Code</b> &nbsp;<i>(fully automated, recommended)</i></summary>
 
 ```bash
-make install-skill   # symlinks .claude/skills/lecture-video-to-doc → ~/.claude/skills/
+make install-skill
 ```
 
-Then in any Claude Code session just say:
+Then in any Claude Code session:
 
-> Convert the videos in `/path/to/my-batch/` into Markdown documents.
+> *"Convert the videos in `/path/to/my-batch/` into Markdown documents."*
 >
-> （或中文：把 `/path/to/my-batch/` 里的视频整理成文档）
+> 中文：把 `/path/to/my-batch/` 里的视频整理成文档
 
-Claude will invoke the `lecture-video-to-doc` skill and drive the entire pipeline — inspect → frames → transcribe → align → dispatch ≤2 cleanup sub-agents → produce one `video-doc.md` per video. You only confirm the extraction mode per video and wait for transcription.
+Claude invokes the bundled `lecture-video-to-doc` skill and drives the whole pipeline. You only confirm the extraction mode per video and wait for transcription.
 
-#### Option B — One shell command (CLI orchestrator)
+</details>
+
+<details>
+<summary><b>🅑 &nbsp;One shell command</b> &nbsp;<i>(CLI orchestrator)</i></summary>
 
 ```bash
 slidoc run my-batch/
 ```
 
-Runs stages 1–3 sequentially and prints the cleanup prompts for stage 4. Paste each printed prompt into your LLM of choice (Claude Code, OpenAI, Ollama, …) to produce the final `video-doc.md` files. Good for scripting, CI, or non-Claude LLMs.
+Runs stages 1–3 and prints the cleanup prompts for stage 4. Paste each into your LLM of choice (Claude Code, OpenAI, Ollama, …). Good for scripting, CI, or non-Claude LLMs.
 
-#### Option C — Stage-by-stage (full manual control)
+</details>
+
+<details>
+<summary><b>🅒 &nbsp;Stage by stage</b> &nbsp;<i>(full manual control)</i></summary>
 
 ```bash
-# Stage 0 — verify each video's format (PPT screencast vs Zoom recording)
+# Stage 0 — verify each video's format
 slidoc inspect my-batch/
 
 # Stage 1 — keyframes
 slidoc frames my-batch/1-speaker-topic.mp4 --out video-doc/videos/1-speaker --mode scene
 slidoc frames my-batch/3-zoom-recording.mp4 --out video-doc/videos/3-zoom --mode fps --interval 90
 
-# Stage 2 — transcribe with built-in quality gate
+# Stage 2 — transcribe with quality gate
 slidoc transcribe my-batch/1-speaker-topic.mp4 --out video-doc/subtitles --basename 1-speaker --model medium
-# If unique-line ratio < 80%, the tool exits with code 4 and prints the large-v3 retry command.
+# Exits 4 if unique-line ratio < 80%; prints the large-v3 retry command.
 
-# Stage 3 — align frames × SRT (idempotent — safe to re-run)
+# Stage 3 — align frames × SRT (idempotent)
 slidoc align video-doc/
 
 # Stage 4 — generate cleanup prompts; dispatch them yourself
@@ -173,75 +201,87 @@ slidoc prompt video-doc/
 slidoc check video-doc/
 ```
 
-Best when you're debugging, want to swap one stage's implementation, or only need part of the pipeline.
+Best for debugging, swapping a stage, or running only part of the pipeline.
+
+</details>
 
 ---
 
-**Expected wall-clock on a real 5-video / 7.5-hour batch:**
+## ⏱️ Time budget on a real batch
 
-| Stage | Time |
-|---|---|
-| 0–1 (inspect + frames, all videos) | ~20 minutes |
-| 2 (whisper, medium + occasional large-v3 retry) | 4–5 hours |
-| 3 (align) | seconds |
-| 4 (LLM cleanup, 2 concurrent) | ~15 minutes |
-| **Hands-on user time** | ~10 minutes total |
+5 videos · 7.5 hours of recording:
 
-## Architecture
+| Stage | Wall clock | You're doing |
+|---|---|---|
+| 0–1 &nbsp;inspect + frames | ~20 min | Confirm mode per video |
+| 2 &nbsp;&nbsp;&nbsp;whisper (medium + occasional large-v3) | 4–5 h | Other things |
+| 3 &nbsp;&nbsp;&nbsp;align | seconds | — |
+| 4 &nbsp;&nbsp;&nbsp;LLM cleanup (2 concurrent) | ~15 min | Sip coffee |
 
-`slidoc` is deliberately split into **four small tools** instead of one monolithic command. Each tool can be run independently, retried, or replaced.
+> 🧑‍💻 &nbsp;**~10 minutes of hands-on user time, total.**
+
+---
+
+## 🏗️ Architecture
+
+Four small tools, not one monolith. Each can run independently, be retried, or be replaced.
 
 | Stage | Tool | Output |
-|---|---|---|
-| ① Keyframes | `slidoc frames` (wraps `ffmpeg`) | `frames/k_NNNN.jpg` + `frame_log.txt` |
-| ② Subtitles | `slidoc transcribe` (wraps `whisper-cli`) | `subtitles/N-title.srt` + quality gate verdict |
-| ③ Alignment | `slidoc align` (Python) | `raw_segments.json` |
-| ④ Cleanup | LLM subagent + `templates/cleanup-prompt.md` | `video-doc.md` |
+|:---:|---|---|
+| ① | `slidoc frames`  (wraps `ffmpeg`) | `frames/k_NNNN.jpg` + `frame_log.txt` |
+| ② | `slidoc transcribe`  (wraps `whisper-cli`) | `subtitles/N-title.srt` |
+| ③ | `slidoc align`  (Python) | `raw_segments.json` |
+| ④ | LLM subagent + [`cleanup-prompt.md`](templates/cleanup-prompt.md) | `video-doc.md` |
 
-The fourth stage is intentionally LLM-driven and not automated inside slidoc — different users have different LLM providers, model choices, and rate-limit budgets. The prompt template is fully specified, includes the validated cleaning rules, and is one copy-paste away.
+Stage 4 is intentionally **not automated inside slidoc** — users have different LLM providers, model choices, and rate-limit budgets. The cleanup prompt template is fully specified and one copy-paste away. The bundled Claude Code skill handles the dispatch for you.
 
-If you use Claude Code, the bundled skill at `.claude/skills/lecture-video-to-doc/` does the dispatch for you.
+---
 
-## The four rules (learned the hard way)
+## 📐 Four rules, learned the hard way
 
-1. **Sample-verify the video format BEFORE 抽帧.** `slidoc inspect` extracts frames at 60s / 300s / 1800s and reports the type so you don't burn an hour on the wrong extraction mode.
-2. **Always quality-gate Whisper output.** `slidoc transcribe` computes the unique-line ratio; below 80% it fails loudly and prints the `large-v3` retry command.
-3. **Cap LLM subagent concurrency at 2.** Each agent reads 10-30 vision-heavy slide images; three concurrent agents OOM-killed our test runs.
-4. **Make alignment idempotent.** `slidoc align` caches `raw_segments.json` by mtime and skips re-running pHash dedup on already-deduped frames.
+1. 🎯 &nbsp;**Sample-verify the video format before extraction.** `slidoc inspect` saves you an hour of wrong-mode extraction.
+2. 🚨 &nbsp;**Always quality-gate Whisper output.** Below 80% unique-line ratio → fail loudly and recommend `large-v3`.
+3. 🚧 &nbsp;**Cap LLM subagent concurrency at 2.** Three concurrent agents reading 20+ slide images each → OOM.
+4. ♻️ &nbsp;**Make alignment idempotent.** `slidoc align` caches `raw_segments.json` by mtime and skips re-running pHash on already-deduped frames.
 
-See [docs/lessons-learned.md](docs/lessons-learned.md) for the full failure log.
+Full failure log: [docs/lessons-learned.md](docs/lessons-learned.md)
 
-## CLI Reference
+---
+
+## 📖 CLI reference
 
 ```
-slidoc inspect <dir>                   Detect video format (PPT / Zoom / talking-head)
-slidoc frames <video> [--mode] [--param]   Extract keyframes
-slidoc transcribe <video> [--model]    Generate SRT + quality gate
-slidoc align <batch_root>              Build raw_segments.json (idempotent)
-slidoc run <batch_root>                Orchestrate all stages + emit cleanup prompts
-slidoc check <batch_root>              Verify all artifacts present + quality stats
+slidoc inspect    <dir>                       Detect video format (PPT / Zoom / talking-head)
+slidoc frames     <video>  [--mode] [--param] Extract keyframes
+slidoc transcribe <video>  [--model]          Generate SRT + quality gate
+slidoc align      <batch>                     Build raw_segments.json (idempotent)
+slidoc run        <batch>                     Orchestrate all stages + emit cleanup prompts
+slidoc check      <batch>                     Verify artifacts + quality stats
+slidoc prompt     <batch>                     Print stage-4 cleanup prompts
 ```
 
 Every command supports `--help`.
 
-## Project Status
+---
 
-- **v0.1.0** — battle-tested on one 7.5 h batch (5 videos, 7 PPT chapters). Pipeline produces production-quality output.
-- **Roadmap**: see [docs/roadmap.md](docs/roadmap.md). Highest priorities: pluggable LLM backends for stage ④, English-language test fixtures, automated end-to-end test on a 30-second sample video.
+## 📊 Project status
 
-## Contributing
+- **v0.1.0** — battle-tested on one 7.5 h batch (5 videos, 7 PPT chapters). Production-ready output.
+- **Next**: pluggable LLM backends for stage ④, English-language test fixtures, 30 s end-to-end smoke test in CI. See [docs/roadmap.md](docs/roadmap.md).
 
-PRs welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) first.
+---
 
-The project is small and focused. Major changes start with an issue describing the problem you're trying to solve.
+## 🤝 Contributing
 
-## License
+PRs welcome — please read [CONTRIBUTING.md](CONTRIBUTING.md) first. The project is small and focused; major changes start with an issue.
+
+## 📄 License
 
 [MIT](LICENSE)
 
-## Acknowledgements
+## 🙏 Acknowledgements
 
-- [ffmpeg](https://ffmpeg.org/) — keyframe extraction, audio extraction
-- [whisper.cpp](https://github.com/ggerganov/whisper.cpp) — local speech-to-text
-- [Pillow](https://python-pillow.org/) — pHash-based deduplication
+- [**ffmpeg**](https://ffmpeg.org/) — keyframe & audio extraction
+- [**whisper.cpp**](https://github.com/ggerganov/whisper.cpp) — local speech-to-text
+- [**Pillow**](https://python-pillow.org/) — pHash-based deduplication
 - Validated on a real 7.5-hour batch of private training material — the project that surfaced every failure mode this pipeline now handles.
