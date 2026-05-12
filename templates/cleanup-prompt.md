@@ -71,12 +71,12 @@ Process segments sequentially. Reply only "DONE" when finished.
 | 变量 | 值（举例） |
 |---|---|
 | `{N}` | 1 |
-| `{TITLE}` | AI 企业培训入门 |
-| `{SPEAKER}` | 陈天 |
+| `{TITLE}` | Intro to Corporate AI Training |
+| `{SPEAKER}` | Speaker A |
 | `{VDIR}` | `/path/to/video-doc/videos/1-chentian-ai-training-intro` |
 | `{N_SEGMENTS}` | 28 |
 | `{DURATION}` | 1h33m |
-| `{RELATIVE_PATH_TO_MP4}` | `../../../1【教练分享】AI企业培训入门_陈天.mp4` |
+| `{RELATIVE_PATH_TO_MP4}` | `../../../1-speaker-a-intro.mp4` |
 
 ## 实战已验证示例（输入 → 输出）
 

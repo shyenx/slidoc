@@ -6,7 +6,7 @@ This file documents the failure modes we hit during one real production batch (5
 
 ## 1. Whisper-medium hallucinates on long Chinese audio
 
-**Symptom.** A 1h33m video (`陈天 - AI 企业培训入门`) transcribed cleanly for the first 5 minutes, then collapsed into the same line repeated for 88 minutes:
+**Symptom.** A 1h33m video (a corporate-training intro talk) transcribed cleanly for the first 5 minutes, then collapsed into the same line repeated for 88 minutes:
 
 ```
 00:05:32  听到的扣个1吧

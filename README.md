@@ -32,21 +32,23 @@ slidoc was built and battle-tested while processing 7.5 hours of real-world trai
 A single Markdown document like this per video:
 
 ```markdown
-# 探索企业培训师的核心能力和成长路径
+# Effective Training Delivery — Core Skills & Growth Path
 
-> 主讲：胡凯翔  |  时长：1h05m  |  帧数：28  |  原视频：[MP4](...)
+> Speaker: B  |  Duration: 1h05m  |  Frames: 28  |  Source: [MP4](...)
 
-## 目录
-- [00:00 段 1：开场调试](#段-1)
-- [03:32 段 6：修炼之路开篇](#段-6)
-- [04:53 段 7：自我介绍与团队](#段-7)
+## Table of contents
+- [00:00 Section 1: opening sound check](#section-1)
+- [03:32 Section 6: opening of the practice journey](#section-6)
+- [04:53 Section 7: introduction and team](#section-7)
 ...
 
-## 段 7 · 00:04:53
+## Section 7 · 00:04:53
 ![slide](frames/k_0007.jpg)
 
-先做自我介绍：提示词领域深耕者，小七姐第一届毕业生……
-（已删除填充词、互动调音、whisper 幻觉，保留全部主干内容）
+Brief self-introduction: longtime practitioner in the prompt-engineering space,
+graduate of an early cohort of a well-known training program...
+(filler words, interaction adjustments, and whisper hallucinations stripped;
+all substantive content preserved.)
 ```
 
 ## Quick Start
@@ -205,4 +207,4 @@ The project is small and focused. Major changes start with an issue describing t
 - [ffmpeg](https://ffmpeg.org/) — keyframe extraction, audio extraction
 - [whisper.cpp](https://github.com/ggerganov/whisper.cpp) — local speech-to-text
 - [Pillow](https://python-pillow.org/) — pHash-based deduplication
-- Validated on real training material from 《破局俱乐部》大航海 (the project that surfaced every failure mode this pipeline now handles).
+- Validated on a real 7.5-hour batch of private training material — the project that surfaced every failure mode this pipeline now handles.
