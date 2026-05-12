@@ -82,34 +82,71 @@ my-batch/
 
 The leading `N-` index in each filename determines pairing across stages (SRT ↔ frames ↔ output dir).
 
-### 3. Run the pipeline
+### 3. Run the pipeline — three options
+
+Pick the level of automation you want.
+
+#### Option A — One sentence in Claude Code (fully automated)
+
+If you use [Claude Code](https://claude.ai/code), install the bundled skill once:
 
 ```bash
-# Verify each video's format (PPT screencast vs Zoom recording)
-slidoc inspect my-batch/
-
-# Extract keyframes (scene-detect by default, fps mode for Zoom recordings)
-slidoc frames my-batch/1-speaker-topic.mp4 --mode scene
-slidoc frames my-batch/3-zoom-recording.mp4 --mode fps --interval 90
-
-# Transcribe with built-in quality gate
-slidoc transcribe my-batch/1-speaker-topic.mp4 --model medium
-# If unique-line ratio < 80%, the tool prints a one-liner to re-run with large-v3.
-
-# Align frames × SRT (idempotent — safe to re-run)
-slidoc align my-batch/
-
-# Then dispatch an LLM subagent per video with templates/cleanup-prompt.md
-# (see docs/cleanup-with-claude.md for how to do this from Claude Code)
+make install-skill   # symlinks .claude/skills/lecture-video-to-doc → ~/.claude/skills/
 ```
 
-Or use the all-in-one orchestrator:
+Then in any Claude Code session just say:
+
+> Convert the videos in `/path/to/my-batch/` into Markdown documents.
+>
+> （或中文：把 `/path/to/my-batch/` 里的视频整理成文档）
+
+Claude will invoke the `lecture-video-to-doc` skill and drive the entire pipeline — inspect → frames → transcribe → align → dispatch ≤2 cleanup sub-agents → produce one `整理.md` per video. You only confirm the extraction mode per video and wait for transcription.
+
+#### Option B — One shell command (CLI orchestrator)
 
 ```bash
 slidoc run my-batch/
-# Runs inspect → frames → transcribe → align in sequence, then prints the
-# cleanup-prompt for each video so you can paste them into Claude Code / your LLM.
 ```
+
+Runs stages 1–3 sequentially and prints the cleanup prompts for stage 4. Paste each printed prompt into your LLM of choice (Claude Code, OpenAI, Ollama, …) to produce the final `整理.md` files. Good for scripting, CI, or non-Claude LLMs.
+
+#### Option C — Stage-by-stage (full manual control)
+
+```bash
+# Stage 0 — verify each video's format (PPT screencast vs Zoom recording)
+slidoc inspect my-batch/
+
+# Stage 1 — keyframes
+slidoc frames my-batch/1-speaker-topic.mp4 --out _整理/视频整理/1-speaker --mode scene
+slidoc frames my-batch/3-zoom-recording.mp4 --out _整理/视频整理/3-zoom --mode fps --interval 90
+
+# Stage 2 — transcribe with built-in quality gate
+slidoc transcribe my-batch/1-speaker-topic.mp4 --out _整理/字幕 --basename 1-speaker --model medium
+# If unique-line ratio < 80%, the tool exits with code 4 and prints the large-v3 retry command.
+
+# Stage 3 — align frames × SRT (idempotent — safe to re-run)
+slidoc align _整理/
+
+# Stage 4 — generate cleanup prompts; dispatch them yourself
+slidoc prompt _整理/
+
+# Final verification
+slidoc check _整理/
+```
+
+Best when you're debugging, want to swap one stage's implementation, or only need part of the pipeline.
+
+---
+
+**Expected wall-clock on a real 5-video / 7.5-hour batch:**
+
+| Stage | Time |
+|---|---|
+| 0–1 (inspect + frames, all videos) | ~20 minutes |
+| 2 (whisper, medium + occasional large-v3 retry) | 4–5 hours |
+| 3 (align) | seconds |
+| 4 (LLM cleanup, 2 concurrent) | ~15 minutes |
+| **Hands-on user time** | ~10 minutes total |
 
 ## Architecture
 
