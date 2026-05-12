@@ -21,16 +21,39 @@ Pick the surface that fits your workflow; both wrap the same four-stage pipeline
 
 ---
 
+## The problem this solves
+
+Video is the most natural medium for explanation, demos, and discussion — but it's **terrible to consume after the fact**.
+
+- **You can't skim.** A 2-hour lecture takes 2 hours to watch. There is no Ctrl-F for spoken content.
+- **You can't sample.** Scrubbing the timeline tells you nothing about which minute has the dense content.
+- **You can't reuse.** Want one quote, one slide, one number? Rewatch.
+- **You can't batch.** A 10-video training series buries the same key insights under 15+ hours of recording.
+
+Reading is 5–10× faster than watching. **A document of "slide thumbnail + cleaned narration" gives you something you can scan, search, quote, and reuse**, while every paragraph still ties back to a specific moment in the original video.
+
+`slidoc` exists for three concrete use cases:
+
+1. **"One long video, 30 minutes of my time."** Read the doc instead of watching. Jump straight to the slide that matters.
+2. **"I attended it; I want my notes."** Get a per-slide transcript faster than you could type one yourself.
+3. **"I have a whole series."** Batch-process 5+ videos and produce a searchable archive instead of a folder of mp4s.
+
+In one sentence: **video is information-rich but opaque; slidoc makes it as scannable as a book.**
+
+---
+
+## How it works
+
 `slidoc` is a four-stage local pipeline that converts one or many lecture videos (Chinese or English, speaker + slides) into a structured Markdown document where **each PPT slide thumbnail is paired with the cleaned narration the speaker delivered while that slide was on screen**. Filler words, audience interaction, technical chitchat, and Whisper hallucinations are stripped automatically; substantive content (concepts, frameworks, names, numbers, examples, Q&A) is preserved.
 
 ```
  mp4 ─┬─► ① frames        (ffmpeg scene-detect or fixed-interval)
       ├─► ② srt           (whisper.cpp with quality gate)
       ├─► ③ raw_segments  (slidoc align: SRT × frames time-window join)
-      └─► ④ video-doc.md       (LLM cleanup via subagent, slide + cleaned narration)
+      └─► ④ video-doc.md  (LLM cleanup via subagent, slide + cleaned narration)
 ```
 
-## Why slidoc?
+## Why a dedicated tool (vs. "just run Whisper")
 
 If you've ever tried to "just transcribe" a 2-hour lecture, you know the pain:
 
