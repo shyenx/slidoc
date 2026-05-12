@@ -12,7 +12,7 @@ Thanks for considering a contribution. slidoc is small, focused, and battle-test
 ## Development setup
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/slidoc.git
+git clone https://github.com/shyenx/slidoc.git
 cd slidoc
 python -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"

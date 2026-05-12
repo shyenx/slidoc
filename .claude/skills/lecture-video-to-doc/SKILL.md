@@ -7,7 +7,7 @@ description: Use when converting one or more lecture or training videos (Chinese
 
 ## Overview
 
-This skill drives the `slidoc` open-source pipeline (https://github.com/YOUR-USERNAME/slidoc). It converts lecture videos into per-video Markdown files where every PPT slide thumbnail is paired with the cleaned narration the speaker delivered while that slide was on screen.
+This skill drives the `slidoc` open-source pipeline (https://github.com/shyenx/slidoc). It converts lecture videos into per-video Markdown files where every PPT slide thumbnail is paired with the cleaned narration the speaker delivered while that slide was on screen.
 
 The pipeline has four stages. Stages 1–3 are executed by the `slidoc` CLI; stage 4 is the LLM cleanup that this skill helps you dispatch.
 
@@ -71,7 +71,7 @@ For stage 4, dispatch the printed prompts as Claude Code subagents (`general-pur
 
 ## See also
 
-- Main project: https://github.com/YOUR-USERNAME/slidoc
+- Main project: https://github.com/shyenx/slidoc
 - Pipeline architecture: `docs/architecture.md` in the repo
 - Lessons-learned (full failure log): `docs/lessons-learned.md`
 - Cleanup prompt template: `templates/cleanup-prompt.md`

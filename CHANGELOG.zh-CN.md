@@ -27,5 +27,5 @@
 - 目前只在中文音频上测过；英文应该能用但缺回归样本。
 - macOS / Apple Silicon 是主要目标平台。Linux 未测但理论可用。
 
-[Unreleased]: https://github.com/YOUR-USERNAME/slidoc/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/YOUR-USERNAME/slidoc/releases/tag/v0.1.0
+[Unreleased]: https://github.com/shyenx/slidoc/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/shyenx/slidoc/releases/tag/v0.1.0

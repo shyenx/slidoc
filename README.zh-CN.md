@@ -68,7 +68,7 @@ slidoc 是处理 7.5 小时真实培训视频时一点点打磨出来的；每�
 
 ```bash
 # Clone
-git clone https://github.com/YOUR-USERNAME/slidoc.git
+git clone https://github.com/shyenx/slidoc.git
 cd slidoc
 
 # 装 Python 包（需要 Python 3.9+）

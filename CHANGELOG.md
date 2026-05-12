@@ -27,5 +27,5 @@ All notable changes to this project will be documented in this file. The format 
 - Tested only on Chinese audio so far; English should work but lacks regression fixtures.
 - macOS / Apple Silicon primary target. Linux untested but should work.
 
-[Unreleased]: https://github.com/YOUR-USERNAME/slidoc/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/YOUR-USERNAME/slidoc/releases/tag/v0.1.0
+[Unreleased]: https://github.com/shyenx/slidoc/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/shyenx/slidoc/releases/tag/v0.1.0

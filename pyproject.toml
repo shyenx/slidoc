@@ -52,10 +52,10 @@ dev = [
 slidoc = "slidoc.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/YOUR-USERNAME/slidoc"
-Repository = "https://github.com/YOUR-USERNAME/slidoc"
-Issues = "https://github.com/YOUR-USERNAME/slidoc/issues"
-Changelog = "https://github.com/YOUR-USERNAME/slidoc/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/shyenx/slidoc"
+Repository = "https://github.com/shyenx/slidoc"
+Issues = "https://github.com/shyenx/slidoc/issues"
+Changelog = "https://github.com/shyenx/slidoc/blob/main/CHANGELOG.md"
 
 [tool.setuptools.packages.find]
 include = ["slidoc*"]

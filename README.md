@@ -70,7 +70,7 @@ all substantive content preserved.)
 
 ```bash
 # Clone
-git clone https://github.com/YOUR-USERNAME/slidoc.git
+git clone https://github.com/shyenx/slidoc.git
 cd slidoc
 
 # Install Python package (requires Python 3.9+)
