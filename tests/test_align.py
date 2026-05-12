@@ -2,14 +2,11 @@
 
 These avoid spinning up ffmpeg/whisper and just exercise the pure-Python pieces.
 """
+
 import json
-import tempfile
 from pathlib import Path
 
-import pytest
-
 from slidoc.align import parse_frame_log, parse_srt, process_video
-
 
 SAMPLE_SHOWINFO_LOG = """\
 ... [Parsed_showinfo_1 @ 0x7f] n:0 pts_time:0.000000
@@ -59,6 +56,7 @@ def test_parse_srt(tmp_path):
 def _make_jpg(p: Path, seed: int = 0):
     """Write a 32x32 JPEG with distinct content per seed so pHash differs."""
     from PIL import Image
+
     # Use a gradient pattern keyed to seed → distinct dHash values.
     img = Image.new("RGB", (32, 32))
     px = img.load()

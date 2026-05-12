@@ -3,6 +3,7 @@
 Includes a quality gate that detects Whisper hallucination loops and recommends
 an automatic retry with `large-v3` and anti-hallucination flags.
 """
+
 from __future__ import annotations
 
 import subprocess
@@ -58,13 +59,20 @@ def _extract_wav(video: Path) -> Path:
     Path(path).unlink()  # close handle, ffmpeg will write
     subprocess.run(
         [
-            "ffmpeg", "-y",
-            "-i", str(video),
-            "-ar", "16000", "-ac", "1",
-            "-c:a", "pcm_s16le",
+            "ffmpeg",
+            "-y",
+            "-i",
+            str(video),
+            "-ar",
+            "16000",
+            "-ac",
+            "1",
+            "-c:a",
+            "pcm_s16le",
             path,
         ],
-        check=True, capture_output=True,
+        check=True,
+        capture_output=True,
     )
     return Path(path)
 
@@ -90,10 +98,13 @@ def transcribe(
     try:
         cmd = [
             "whisper-cli",
-            "-m", str(model_path),
-            "-l", language,
+            "-m",
+            str(model_path),
+            "-l",
+            language,
             "-osrt",
-            "-of", str(out_dir / basename),
+            "-of",
+            str(out_dir / basename),
         ]
         if label == "large-v3":
             cmd += LARGE_V3_ANTIHALLUC

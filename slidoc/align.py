@@ -7,9 +7,9 @@ Frames already named `k_NNNN.jpg` are assumed to be pre-deduped (the output of
 a previous run) and pHash dedup is skipped — this prevents re-running from
 collapsing the carefully time-aligned frames to a wrong subset.
 """
+
 from __future__ import annotations
 
-import glob
 import json
 import os
 import re

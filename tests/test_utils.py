@@ -1,9 +1,8 @@
 """Tests for slidoc.utils."""
+
 import tempfile
 import time
 from pathlib import Path
-
-import pytest
 
 from slidoc.utils import fmt_duration, fmt_ts, is_newer, parse_index_prefix
 

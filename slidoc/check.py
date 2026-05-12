@@ -1,4 +1,5 @@
 """Batch verification (stage ⑤): confirm every video has all artifacts."""
+
 from __future__ import annotations
 
 import json

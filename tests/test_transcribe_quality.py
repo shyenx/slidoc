@@ -1,4 +1,5 @@
 """Tests for the SRT quality gate (no whisper required)."""
+
 from slidoc.transcribe import quality_report
 
 
@@ -12,12 +13,15 @@ def _write_srt(path, blocks):
 
 def test_quality_report_unique(tmp_path):
     srt = tmp_path / "good.srt"
-    _write_srt(srt, [
-        ("00:00:00,000", "00:00:02,000", "line one"),
-        ("00:00:02,000", "00:00:04,000", "line two"),
-        ("00:00:04,000", "00:00:06,000", "line three"),
-        ("00:00:06,000", "00:00:08,000", "line four"),
-    ])
+    _write_srt(
+        srt,
+        [
+            ("00:00:00,000", "00:00:02,000", "line one"),
+            ("00:00:02,000", "00:00:04,000", "line two"),
+            ("00:00:04,000", "00:00:06,000", "line three"),
+            ("00:00:06,000", "00:00:08,000", "line four"),
+        ],
+    )
     qr = quality_report(srt)
     assert qr["total"] == 4
     assert qr["unique"] == 4
@@ -29,7 +33,7 @@ def test_quality_report_hallucination(tmp_path):
     blocks = [("00:00:00,000", "00:00:02,000", "good opener")]
     # 9 repeats of the same garbage line
     for i in range(9):
-        blocks.append((f"00:00:{2+i*2:02d},000", f"00:00:{4+i*2:02d},000", "looped phrase"))
+        blocks.append((f"00:00:{2 + i * 2:02d},000", f"00:00:{4 + i * 2:02d},000", "looped phrase"))
     _write_srt(srt, blocks)
     qr = quality_report(srt)
     assert qr["total"] == 10

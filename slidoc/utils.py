@@ -1,7 +1,7 @@
 """Shared utilities."""
+
 from __future__ import annotations
 
-import os
 import re
 import subprocess
 from pathlib import Path
@@ -31,9 +31,7 @@ def is_newer(target: str | Path, *deps: str | Path) -> bool:
 def require_binary(name: str) -> str:
     """Return the absolute path of `name` or raise with a friendly message."""
     try:
-        result = subprocess.run(
-            ["which", name], check=True, capture_output=True, text=True
-        )
+        result = subprocess.run(["which", name], check=True, capture_output=True, text=True)
         return result.stdout.strip()
     except subprocess.CalledProcessError:
         raise RuntimeError(
@@ -81,12 +79,17 @@ def video_duration(video: str | Path) -> float:
     result = subprocess.run(
         [
             "ffprobe",
-            "-v", "error",
-            "-show_entries", "format=duration",
-            "-of", "csv=p=0",
+            "-v",
+            "error",
+            "-show_entries",
+            "format=duration",
+            "-of",
+            "csv=p=0",
             str(video),
         ],
-        check=True, capture_output=True, text=True,
+        check=True,
+        capture_output=True,
+        text=True,
     )
     return float(result.stdout.strip())
 

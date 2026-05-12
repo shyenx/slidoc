@@ -1,4 +1,5 @@
 """Emit cleanup prompts for stage 4 LLM subagents."""
+
 from __future__ import annotations
 
 import json

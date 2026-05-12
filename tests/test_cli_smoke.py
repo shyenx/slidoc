@@ -1,4 +1,5 @@
 """CLI smoke tests — ensure all subcommands are wired and --help works."""
+
 import subprocess
 import sys
 
@@ -6,7 +7,8 @@ import sys
 def _run(*args):
     return subprocess.run(
         [sys.executable, "-m", "slidoc.cli", *args],
-        capture_output=True, text=True,
+        capture_output=True,
+        text=True,
     )
 
 

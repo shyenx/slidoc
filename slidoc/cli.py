@@ -1,4 +1,5 @@
 """Command-line interface for slidoc."""
+
 from __future__ import annotations
 
 import argparse
@@ -19,7 +20,9 @@ def _add_inspect(sub):
     p = sub.add_parser("inspect", help="Sample frames from each mp4 to classify video format")
     p.add_argument("batch_dir", type=Path)
     p.add_argument(
-        "--sample-dir", type=Path, default=Path("/tmp/slidoc-samples"),
+        "--sample-dir",
+        type=Path,
+        default=Path("/tmp/slidoc-samples"),
         help="where to write sample JPGs (default: /tmp/slidoc-samples)",
     )
     p.set_defaults(func=lambda a: inspect_batch(a.batch_dir, a.sample_dir))
@@ -29,16 +32,22 @@ def _add_frames(sub):
     p = sub.add_parser("frames", help="Extract keyframes from one video")
     p.add_argument("video", type=Path)
     p.add_argument(
-        "--out", type=Path, required=True,
+        "--out",
+        type=Path,
+        required=True,
         help="output directory (will contain frames/ and frame_log.txt)",
     )
     p.add_argument("--mode", choices=["scene", "fps"], default="scene")
     p.add_argument(
-        "--threshold", type=float, default=0.30,
+        "--threshold",
+        type=float,
+        default=0.30,
         help="scene-detect threshold (mode=scene; default 0.30)",
     )
     p.add_argument(
-        "--interval", type=int, default=90,
+        "--interval",
+        type=int,
+        default=90,
         help="seconds between frames (mode=fps; default 90)",
     )
     p.add_argument("--width", type=int, default=1280)
@@ -60,7 +69,9 @@ def _add_transcribe(sub):
     p = sub.add_parser("transcribe", help="Generate SRT for one video + quality gate")
     p.add_argument("video", type=Path)
     p.add_argument(
-        "--out", type=Path, required=True,
+        "--out",
+        type=Path,
+        required=True,
         help="output directory for SRT (will contain <basename>.srt)",
     )
     p.add_argument(
@@ -68,7 +79,8 @@ def _add_transcribe(sub):
         help="output basename without extension (default: video filename stem)",
     )
     p.add_argument(
-        "--model", default="medium",
+        "--model",
+        default="medium",
         choices=["base", "small", "medium", "large-v3"],
     )
     p.add_argument("--language", default="zh")
@@ -132,7 +144,9 @@ def _add_run(sub):
     p.add_argument("batch_dir", type=Path)
     p.add_argument("--out", type=Path, help="output root (default: batch_dir/video-doc)")
     p.add_argument(
-        "--frames-mode", choices=["scene", "fps"], default="scene",
+        "--frames-mode",
+        choices=["scene", "fps"],
+        default="scene",
         help="default extraction mode (per-video can be overridden by editing scripts)",
     )
     p.add_argument("--model", default="medium")
@@ -170,8 +184,8 @@ def _add_run(sub):
 
         banner("Stage 4: emit prompts")
         print(
-            "Run `slidoc prompt {out}` to print one cleanup prompt per video,\n"
-            "then dispatch each to your LLM of choice (e.g. Claude Code subagent).".format(out=out)
+            f"Run `slidoc prompt {out}` to print one cleanup prompt per video,\n"
+            "then dispatch each to your LLM of choice (e.g. Claude Code subagent)."
         )
         print()
         check_batch(out)

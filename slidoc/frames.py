@@ -6,6 +6,7 @@ Two modes:
 - `fps`: fixed-interval sampling. Best for Zoom-style recordings with moving
   chat sidebars / webcam tiles that defeat scene-detect.
 """
+
 from __future__ import annotations
 
 import subprocess
@@ -49,10 +50,14 @@ def extract_keyframes(
     banner(f"extract [{mode}] → {fdir}")
 
     cmd = [
-        "ffmpeg", "-y",
-        "-i", str(video),
-        "-vf", vf,
-        "-q:v", str(quality),
+        "ffmpeg",
+        "-y",
+        "-i",
+        str(video),
+        "-vf",
+        vf,
+        "-q:v",
+        str(quality),
     ]
     if mode == "scene":
         cmd += ["-vsync", "vfr"]
@@ -67,9 +72,7 @@ def extract_keyframes(
     # Heuristic hints
     if mode == "scene":
         if count > 200:
-            warn(
-                f"{count} frames — too many. Raise threshold (try {scene_threshold + 0.10:.2f})."
-            )
+            warn(f"{count} frames — too many. Raise threshold (try {scene_threshold + 0.10:.2f}).")
         elif count < 10:
             warn(
                 f"{count} frames — too few. Lower threshold (try {max(0.10, scene_threshold - 0.10):.2f}) "

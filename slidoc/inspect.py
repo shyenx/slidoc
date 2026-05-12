@@ -4,6 +4,7 @@ PPT screencasts, Zoom recordings, and talking-head videos need different
 extraction strategies. This module produces sample JPGs that the user (or LLM
 agent) can eyeball to decide.
 """
+
 from __future__ import annotations
 
 import subprocess
@@ -36,14 +37,20 @@ def sample_frames(
         out = out_dir / f"sample_{video.stem[:20]}_{t:05d}.jpg"
         subprocess.run(
             [
-                "ffmpeg", "-y",
-                "-ss", str(t),
-                "-i", str(video),
-                "-frames:v", "1",
-                "-vf", f"scale={width}:-1",
+                "ffmpeg",
+                "-y",
+                "-ss",
+                str(t),
+                "-i",
+                str(video),
+                "-frames:v",
+                "1",
+                "-vf",
+                f"scale={width}:-1",
                 str(out),
             ],
-            check=True, capture_output=True,
+            check=True,
+            capture_output=True,
         )
         written.append(out)
     return written
