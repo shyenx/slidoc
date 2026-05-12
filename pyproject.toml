@@ -1,0 +1,81 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "slidoc"
+version = "0.1.0"
+description = "Turn lecture videos into Markdown documents pairing slides with cleaned narration"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {file = "LICENSE"}
+authors = [
+    {name = "slidoc contributors"}
+]
+keywords = [
+    "video",
+    "transcription",
+    "whisper",
+    "lecture",
+    "ffmpeg",
+    "subtitles",
+    "ppt",
+    "slides",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: MacOS",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Video",
+    "Topic :: Text Processing",
+]
+dependencies = [
+    "Pillow>=10.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.1",
+]
+
+[project.scripts]
+slidoc = "slidoc.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/YOUR-USERNAME/slidoc"
+Repository = "https://github.com/YOUR-USERNAME/slidoc"
+Issues = "https://github.com/YOUR-USERNAME/slidoc/issues"
+Changelog = "https://github.com/YOUR-USERNAME/slidoc/blob/main/CHANGELOG.md"
+
+[tool.setuptools.packages.find]
+include = ["slidoc*"]
+exclude = ["tests*"]
+
+[tool.setuptools.package-data]
+slidoc = ["../templates/*.md", "../scripts/*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-ra --strict-markers"
+markers = [
+    "integration: requires ffmpeg + whisper-cli + sample mp4",
+]
