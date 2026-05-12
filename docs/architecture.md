@@ -1,5 +1,7 @@
 # Architecture
 
+[English](architecture.md) · [中文](architecture.zh-CN.md)
+
 ```
 ┌────────────────────────────────────────────────────────────────────┐
 │                          slidoc pipeline                            │

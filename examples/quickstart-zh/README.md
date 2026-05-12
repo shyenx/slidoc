@@ -1,5 +1,7 @@
 # Quickstart (Chinese lecture video)
 
+[English](README.md) · [中文](README.zh-CN.md)
+
 Drop a Chinese-language lecture mp4 here named `lecture.mp4`, then:
 
 ```bash

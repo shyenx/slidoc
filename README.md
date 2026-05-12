@@ -2,10 +2,23 @@
 
 > Turn lecture & training videos into Markdown documents that **pair each slide with its cleaned narration**.
 
+[English](README.md) · [中文](README.zh-CN.md)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![ffmpeg](https://img.shields.io/badge/requires-ffmpeg-orange.svg)](https://ffmpeg.org/)
 [![whisper.cpp](https://img.shields.io/badge/requires-whisper.cpp-purple.svg)](https://github.com/ggerganov/whisper.cpp)
+
+## What this is
+
+`slidoc` is a **hybrid project**: a Python CLI package that ships with a bundled Claude Code skill.
+
+- **As a CLI tool** — install with `pip install -e .`, then run `slidoc inspect|frames|transcribe|align|check|prompt|run` from any shell. Useful in CI, scripts, or non-Claude workflows.
+- **As a Claude Code skill** — symlink `.claude/skills/lecture-video-to-doc/` into your `~/.claude/skills/` (`make install-skill`) and Claude drives the whole pipeline end-to-end when you mention lecture videos.
+
+Pick the surface that fits your workflow; both wrap the same four-stage pipeline.
+
+---
 
 `slidoc` is a four-stage local pipeline that converts one or many lecture videos (Chinese or English, speaker + slides) into a structured Markdown document where **each PPT slide thumbnail is paired with the cleaned narration the speaker delivered while that slide was on screen**. Filler words, audience interaction, technical chitchat, and Whisper hallucinations are stripped automatically; substantive content (concepts, frameworks, names, numbers, examples, Q&A) is preserved.
 

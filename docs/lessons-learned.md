@@ -1,5 +1,7 @@
 # Lessons learned
 
+[English](lessons-learned.md) · [中文](lessons-learned.zh-CN.md)
+
 > Why every rule in this pipeline exists. If you ever consider removing one of the safeguards below, please re-read the corresponding failure first.
 
 This file documents the failure modes we hit during one real production batch (5 lecture videos, 7.5 hours total). The pipeline's defaults all trace back to these incidents.

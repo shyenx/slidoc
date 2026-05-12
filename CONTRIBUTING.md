@@ -1,5 +1,7 @@
 # Contributing to slidoc
 
+[English](CONTRIBUTING.md) · [中文](CONTRIBUTING.zh-CN.md)
+
 Thanks for considering a contribution. slidoc is small, focused, and battle-tested — the best way to help is to make it more reliable, more portable, or extend it to formats it doesn't yet handle.
 
 ## Before you start

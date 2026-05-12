@@ -1,5 +1,7 @@
 # Stage 4 — Cleanup with Claude Code
 
+[English](cleanup-with-claude.md) · [中文](cleanup-with-claude.zh-CN.md)
+
 `slidoc` deliberately does not automate the final LLM cleanup step. This page explains the recommended workflow when using **Claude Code** as the LLM, including the bundled skill.
 
 ## Why stage 4 is not automated inside slidoc

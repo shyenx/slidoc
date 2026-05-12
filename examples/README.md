@@ -1,5 +1,7 @@
 # Examples
 
+[English](README.md) · [中文](README.zh-CN.md)
+
 Tiny end-to-end demos. Each subdirectory is a self-contained reproduction.
 
 ## quickstart-zh
