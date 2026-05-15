@@ -1,6 +1,6 @@
 ---
 name: lecture-video-to-doc
-description: Use when converting one or more lecture or training videos (Chinese or English speaker with slides on screen) into a structured Markdown document that pairs each slide with the cleaned narration for that slide. Triggers include "把videos成文档"、"视频带PPT配文字"、"讲座视频转图文笔记"、"lecture video to markdown"、"slides+narration doc". Skip when only raw transcription is needed (use video-transcribe) or only frames (use video-keyframe-extract).
+description: Use when converting one or more lecture or training videos (Chinese or English speaker with slides on screen) into a structured Markdown document that pairs each slide with the cleaned narration for that slide. Triggers include "把视频整理成文档"、"视频带PPT配文字"、"讲座视频转图文笔记"、"批量处理讲座视频"、"lecture video to markdown"、"slides+narration doc"、"video to slidedeck transcript". Skip when only raw transcription is needed (use video-transcribe) or only frames (use video-keyframe-extract).
 ---
 
 # Lecture Video → Slides + Narration Markdown
